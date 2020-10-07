@@ -11,7 +11,7 @@ new_data = True
 
 while True:
 	if new_data:
-		filename = input(str("Please enter filename for incoming transfer: ")
+		filename = input(str("Please enter filename for incoming transfer: "))
 		data_file = open(filename, "wb")
 		new_data = False
 
