@@ -42,9 +42,34 @@ if sock is None:
 
 sock.connect(addrPort)
 
-fsock = EncapFramedSock((sock, addrPort))
+filename - input("Please enter name of file to send: ")
 
-for i in range(2):
-    print("sending hello world")
-    fsock.send( b"hello world", debug)
-    print("received:", fsock.receive(debug))
+if exists(filename):
+	open_file = open(filename, 'rb')
+	data = open_file.read()
+	open_file.close()
+	if len(data) == 0:
+		print("File is empty... terminating transfer...")
+		sys.exit(0)
+	else:
+		server_filename = input("Please enter name for the file on transmitted server: ")
+		framedSend(sock, server_filename.encode(), debug)
+		file_exists = framedReceive(sock, debug)
+		file_exists = file_exists.decode()
+		if file_exists == "True":
+			print("Invalid filename... terminating transfer...")
+			sys.exit(0)
+		else:
+			try:
+				framedSend(sock, data, debug)
+			except:
+				print("Unable to secure transfer... terminating transfer...")
+				sys.exit(0)
+			try:
+				framedReceive(sock, debug)
+			except:
+				print("Unable to secure transfer... terminating transfer...")
+				sys.exit(0)
+else:
+	print("Cannot transfer non-existant file... terminating transfer...")
+	sys.exit(0)
