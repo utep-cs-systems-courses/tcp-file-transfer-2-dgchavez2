@@ -3,17 +3,21 @@
 # Echo client program
 import socket, sys, re
 
+from os.path import exists
+
 sys.path.append("../lib")       # for params
 import params
 
 from encapFramedSock import EncapFramedSock
 
+from framedSock import framedSend, framedReceive
+
 
 switchesVarDefaults = (
-    (('-s', '--server'), 'server', "127.0.0.1:50001"),
-    (('-d', '--debug'), "debug", False), # boolean (set if present)
-    (('-?', '--usage'), "usage", False), # boolean (set if present)
-    )
+	(('-s', '--server'), 'server', "127.0.0.1:50001"),
+	(('-d', '--debug'), "debug", False), # boolean (set if present)
+	(('-?', '--usage'), "usage", False), # boolean (set if present)
+	)
 
 progname = "framedClient"
 paramMap = params.parseParams(switchesVarDefaults)
@@ -21,14 +25,14 @@ paramMap = params.parseParams(switchesVarDefaults)
 server, usage, debug  = paramMap["server"], paramMap["usage"], paramMap["debug"]
 
 if usage:
-    params.usage()
+	params.usage()
 
 try:
-    serverHost, serverPort = re.split(":", server)
-    serverPort = int(serverPort)
+	serverHost, serverPort = re.split(":", server)
+	serverPort = int(serverPort)
 except:
-    print("Can't parse server:port from '%s'" % server)
-    sys.exit(1)
+	print("Can't parse server:port from '%s'" % server)
+	sys.exit(1)
 
 addrFamily = socket.AF_INET
 socktype = socket.SOCK_STREAM
@@ -37,12 +41,12 @@ addrPort = (serverHost, serverPort)
 sock = socket.socket(addrFamily, socktype)
 
 if sock is None:
-    print('could not open socket')
-    sys.exit(1)
+	print('could not open socket')
+	sys.exit(1)
 
 sock.connect(addrPort)
 
-filename - input("Please enter name of file to send: ")
+filename = input("Please enter name of file to send: ")
 
 if exists(filename):
 	open_file = open(filename, 'rb')
