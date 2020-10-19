@@ -8,7 +8,7 @@ class EncapFramedSock:               # a facade
     return self.sock.close()
   def send(self, payload, debugPrint=0):
     if debugPrint: print("framedSend: sending %d byte message" % len(payload))
-    msg = str(len(payload)).encode() + b':' + payload
+    msg =  str(len(payload)).encode() + b':' + payload.encode() #removed b ':'
     while len(msg):
       nsent = self.sock.send(msg)
       msg = msg[nsent:]
@@ -17,7 +17,8 @@ class EncapFramedSock:               # a facade
     msgLength = -1
     while True:
       if (state == "getLength"):
-        match = re.match(b'([^:]+):(.*)', self.rbuf, re.DOTALL | re.MULTILINE) # look for colon
+	#response.read().decode('utf-8') #added to see if it works now for re.match incompatibility
+        match = re.match(b'([^:]+):(.*)', self.rbuf, re.DOTALL | re.MULTILINE) # look for colon and removed b '([
         if match:
           lengthStr, self.rbuf = match.groups()
           try: 

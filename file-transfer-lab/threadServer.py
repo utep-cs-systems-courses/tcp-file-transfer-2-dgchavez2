@@ -58,13 +58,15 @@ class Server(Thread):
 			#	if no payload2:
 			#		break
 				payload2 += b"!"
-				try:
-					self.fsock.send(payload2, debug)
-				except:
-					print("Unable to receive and finalize transfer... terminating transfer...")
+			#	try:
+			#		self.fsock.send(payload2, debug)
+			#	except:
+			#		print("Unable to receive and finalize transfer... terminating transfer...1")
 				rcvd_file = open(payload, 'wb')
 				rcvd_file.write(payload2)
 				rcvd_file.close()
+				self.sock.shutdown(socket.SHUT_RD)
+				self.sock.close()
 
 while True:
 	sockAddr = lsock.accept()
