@@ -29,20 +29,26 @@ print("listening on:", bindAddr)
 
 from threading import Thread;
 from encapFramedSock import EncapFramedSock
+import threading
+
+lock = threading.Lock()
 
 class Server(Thread):
 	def __init__(self, sockAddr):
 		Thread.__init__(self)
 		self.sock, self.addr = sockAddr
 		self.fsock = EncapFramedSock(sockAddr)
+
 	def run(self):
 		print("new thread handling connection from", self.addr)
 		while True:
+			lock.acquire()
 			payload = self.fsock.receive(debug)
 			if debug: print("rec'd: ", payload)
 			if not payload:     # done
 				if debug: print("thread connected to {addr} done") #removed f here
 				self.fsock.close()
+				lock.release()
 				return          # exit
             # here
 			payload = payload.decode()
@@ -67,6 +73,7 @@ class Server(Thread):
 				rcvd_file.close()
 				self.sock.shutdown(socket.SHUT_RD)
 				self.sock.close()
+		lock.release()
 
 while True:
 	sockAddr = lsock.accept()
