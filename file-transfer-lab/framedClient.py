@@ -1,7 +1,7 @@
 #! /usr/bin/env python3
 
 # Echo client program
-import socket, sys, re
+import socket, sys, re, os
 
 from os.path import exists
 
@@ -60,8 +60,8 @@ if exists(filename):
 		framedSend(sock, server_filename.encode(), debug)
 		file_exists = framedReceive(sock, debug)
 		file_exists = file_exists.decode()
-		if file_exists == "True":
-			print("Invalid filename... terminating transfer...")
+		if os.path.exists(os.getcwd() + '/' + server_filename) is True:
+			print("File already exists on server... terminating transfer...")
 			sys.exit(0)
 		else:
 			try:
