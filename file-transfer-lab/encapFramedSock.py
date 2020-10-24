@@ -8,7 +8,7 @@ class EncapFramedSock:               # a facade
     return self.sock.close()
   def send(self, payload, debugPrint=0):
     if debugPrint: print("framedSend: sending %d byte message" % len(payload))
-    msg =  str(len(payload)).encode() + b':' + payload.encode() #removed b ':'
+    msg =  str(len(payload)).encode() + b':' + payload.encode() #removed b ':' .encode()
     while len(msg):
       nsent = self.sock.send(msg)
       msg = msg[nsent:]
